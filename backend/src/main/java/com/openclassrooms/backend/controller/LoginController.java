@@ -20,8 +20,8 @@ public class LoginController {
     
     @PostMapping("/auth/login")
     public String getToken(Authentication authentication) {
-                String token = jwtService.generateToken(authentication);
-                return token;
+                //String token = jwtService.generateToken(authentication);
+                return "token";
     }
     
 }

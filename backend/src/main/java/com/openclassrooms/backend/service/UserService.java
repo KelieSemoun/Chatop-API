@@ -16,6 +16,8 @@ import lombok.Data;
 public class UserService {
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 	
 	public Optional<User> getUser(final Integer id){
