@@ -8,24 +8,28 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.openclassrooms.backend.model.User;
+import com.openclassrooms.backend.service.JWTService;
 import com.openclassrooms.backend.service.UserService;
 
 @RestController
-@RequestMapping(path="/chatopdb")
+@RequestMapping(path="api/auth/register")
 public class UserController {
 	
 	@Autowired
 	private UserService userService;
 	
-	@PostMapping(path="/register")
+	private JWTService jwtService;
+	
+	@PostMapping
 	public @ResponseBody String registerUser(@RequestParam String name,
 											 @RequestParam String email,
-											 @RequestParam String password) {
-		User user = new User();
-		user.setName(name);
-		user.setEmail(email);
-		userService.saveUser(user);
-		return "Saved";
+											 @RequestParam String password
+											 /*,Authentication authentication*/) {
+		userService.signUpUser(new User(name,
+										email,
+										password));
+		//String token = jwtService.generateToken(authentication);
+        return /*token*/ "token";
 	}
 	
 	

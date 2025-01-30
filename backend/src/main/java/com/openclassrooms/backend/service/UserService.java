@@ -3,6 +3,7 @@ package com.openclassrooms.backend.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.openclassrooms.backend.model.User;
@@ -15,17 +16,28 @@ import lombok.Data;
 public class UserService {
 	@Autowired
 	private UserRepository userRepository;
+	private BCryptPasswordEncoder passwordEncoder;
 	
 	public Optional<User> getUser(final Integer id){
 		return userRepository.findById(id);
 	}
 	
-	public void deleteUser(final Integer id) {
-		userRepository.deleteById(id);
+	public void signUpUser(User user) {
+		boolean userExists = userRepository.findByEmail(user.getEmail())
+										   .isPresent();
+		
+		if(userExists) {
+			throw new IllegalStateException("email already taken");
+		}
+		
+		String encodedPassword = passwordEncoder.encode(user.getPassword());
+		
+		user.setPassword(encodedPassword);
+		
+		userRepository.save(user);
 	}
 	
-	public User saveUser(User user) {
-		User savedUser = userRepository.save(user);
-		return savedUser;
+	public void deleteUser(final Integer id) {
+		userRepository.deleteById(id);
 	}
 }
