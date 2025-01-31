@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.openclassrooms.backend.exception.ApiRequestException;
 import com.openclassrooms.backend.model.User;
 import com.openclassrooms.backend.repository.UserRepository;
 
@@ -29,7 +30,7 @@ public class UserService {
 										   .isPresent();
 		
 		if(userExists) {
-			throw new IllegalStateException("email already taken");
+			throw new ApiRequestException("email is already taken");
 		}
 		
 		String encodedPassword = passwordEncoder.encode(user.getPassword());

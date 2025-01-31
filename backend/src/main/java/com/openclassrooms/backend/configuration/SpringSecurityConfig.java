@@ -25,11 +25,10 @@ import com.nimbusds.jose.jwk.source.ImmutableSecret;
 
 
 @Configuration
-public class SpringSecurityConfig {
+public class SpringSecurityConfig{
     
     private String jwtKey = Optional.ofNullable(System.getenv("JWT_SECRET")).orElseThrow(() -> new IllegalStateException("JWT_SECRET env var is not defined"));
-
-
+    
 	@Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {        
         return http
@@ -37,8 +36,10 @@ public class SpringSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> {
                 	auth.requestMatchers("api/auth/**").permitAll();
+                	auth.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll();
                 	auth.anyRequest().authenticated();
                 })
+                .formLogin(login -> login.disable())
                 .httpBasic(Customizer.withDefaults())
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
                 .build();       
