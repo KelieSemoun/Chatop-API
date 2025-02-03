@@ -1,12 +1,15 @@
 package com.openclassrooms.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.openclassrooms.backend.exception.ApiException;
+import com.openclassrooms.backend.exception.ApiRequestException;
 import com.openclassrooms.backend.model.TokenDTO;
 import com.openclassrooms.backend.model.User;
 import com.openclassrooms.backend.service.JWTService;
@@ -19,7 +22,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping(path="api/auth/register")
+@RequestMapping(path="api/auth/")
 @Tag(name = "Authentication")
 public class UserController {
 	
@@ -28,6 +31,20 @@ public class UserController {
 	
 	@Autowired
 	private JWTService jwtService;
+	
+	@PostMapping(path="login")
+    public TokenDTO loginUser(@RequestParam String email,
+    						  @RequestParam String password) throws Exception {
+		try {
+			userService.logInUser(email, password);
+		} catch (DisabledException | BadCredentialsException e){
+			System.out.println("Not found");
+			throw new ApiRequestException("Wrong Credentials !");
+		}
+		String token = jwtService.generateToken(email);
+        return new TokenDTO(token);
+    }
+    
 	
 	@Operation(
 		description = "Register the user in the website",
@@ -45,7 +62,7 @@ public class UserController {
 			)
 		}
 	)
-	@PostMapping
+	@PostMapping(path="register")
 	public TokenDTO registerUser(@RequestParam String name,
 								 @RequestParam String email,
 								 @RequestParam String password) {
