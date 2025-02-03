@@ -32,13 +32,28 @@ public class UserController {
 	@Autowired
 	private JWTService jwtService;
 	
+	@Operation(
+		description = "Login the user to the website",
+		responses = {
+			@ApiResponse(
+				description = "Success",
+				responseCode = "200"
+			),
+			@ApiResponse(
+				description = "Bad request due to wrong credentials entered",
+				responseCode = "400",
+				content = @Content(
+					schema = @Schema(implementation = ApiException.class)
+				)
+			)
+		}
+	)
 	@PostMapping(path="login")
     public TokenDTO loginUser(@RequestParam String email,
     						  @RequestParam String password) throws Exception {
 		try {
 			userService.logInUser(email, password);
 		} catch (DisabledException | BadCredentialsException e){
-			System.out.println("Not found");
 			throw new ApiRequestException("Wrong Credentials !");
 		}
 		String token = jwtService.generateToken(email);
@@ -73,5 +88,9 @@ public class UserController {
         return new TokenDTO(token);
 	}
 	
+	/*@PostMapping(path="me")
+	public UserDTO getMyProfile() {
+		
+	}*/
 	
 }

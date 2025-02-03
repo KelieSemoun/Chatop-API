@@ -1,5 +1,6 @@
 package com.openclassrooms.backend.model;
 
+import java.time.LocalDate;
 import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -35,6 +36,10 @@ public class User implements UserDetails {
 	
 	private String password;
 	
+	private LocalDate createdAt;
+	
+	private LocalDate updatedAt;
+	
 	public User() {}
 	
 	public User(String name,
@@ -43,6 +48,8 @@ public class User implements UserDetails {
 		this.name = name;
 		this.email = email;
 		this.password = password;
+		this.createdAt = LocalDate.now();
+		this.updatedAt = LocalDate.now();
 	}
 
 	public String getName() {

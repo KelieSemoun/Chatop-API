@@ -1,12 +1,8 @@
 package com.openclassrooms.backend.service;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,18 +24,10 @@ public class UserService{
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	
-	private final static String USER_NOT_FOUND_MSG =
-			"User with email %s not found";
-	
-	public Optional<User> getUser(final Integer id){
-		return userRepository.findById(id);
-	}
-	
 	public void signUpUser(User user) {
-		boolean userExists = userRepository.findByEmail(user.getEmail())
-										   .isPresent();
+		User res = userRepository.findByEmail(user.getEmail());
 		
-		if(userExists) {
+		if(res != null) {
 			throw new ApiRequestException("email is already taken");
 		}
 		
@@ -50,23 +38,11 @@ public class UserService{
 		userRepository.save(user);
 	}
 	
-	public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException {
-		return userRepository.findByEmail(email)
-				.orElseThrow(() ->
-						new UsernameNotFoundException(
-								String.format(USER_NOT_FOUND_MSG, email)));
-	}
-	
 	public void deleteUser(final Integer id) {
 		userRepository.deleteById(id);
 	}
 
 	public void logInUser(String email, String password) {
-		Optional<User> userDetails = userRepository.findByEmail(email);
-		if(!userDetails.isPresent()) {
-			throw new ApiRequestException("Wrong Credentials !");
-		}
-		System.out.println(userDetails.get().getName());
-		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDetails.get().getEmail(), userDetails.get().getPassword()));
+		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
 	}
 }
