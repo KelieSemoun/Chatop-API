@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.openclassrooms.backend.exception.ApiRequestException;
 import com.openclassrooms.backend.model.User;
+import com.openclassrooms.backend.model.UserDTO;
 import com.openclassrooms.backend.repository.UserRepository;
 
 import lombok.Data;
@@ -44,5 +45,14 @@ public class UserService{
 
 	public void logInUser(String email, String password) {
 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+	}
+
+	public UserDTO findMyUser(String tokenEmail) {
+		User res = userRepository.findByEmail(tokenEmail);
+		return new UserDTO(res.getId(),
+						   res.getName(),
+						   res.getEmail(),
+						   res.getCreatedAt(),
+						   res.getUpdatedAt());
 	}
 }
