@@ -111,7 +111,11 @@ public class UserController {
 	})		
 	@GetMapping(path="me")
 	public UserDTO getMyProfile(@RequestHeader("BearerToken") String bearerToken) {
-		String tokenEmail = jwtService.extractUserName(bearerToken.substring(7));
+		System.out.println("Toto");
+		if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+			bearerToken = bearerToken.substring(7);
+        }
+		String tokenEmail = jwtService.extractUserName(bearerToken);
 		return userService.findMyUser(tokenEmail);
 	}
 	

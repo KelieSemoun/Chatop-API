@@ -14,29 +14,39 @@ import lombok.Setter;
 @Setter
 @Data
 @Entity
-public class User{
+public class Rental {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
-
+	
 	private String name;
-	
-	private String email;
-	
-	private String password;
 
+	private Integer surface;
+	
+	private Integer price;
+	
+	private String picture;
+	
+	private String description;
+	
+	private Integer ownerId;
+	
 	private LocalDate createdAt;
 	
 	private LocalDate updatedAt;
 	
-	public User() {}
-	
-	public User(String name,
-				String email,
-				String password) {
+	public Rental(String name,
+				   Integer surface,
+				   Integer price,
+				   String picturePath,
+				   String description,
+				   Integer ownerId){
 		this.name = name;
-		this.email = email;
-		this.password = password;
+		this.surface = surface;
+		this.price = price;
+		this.picture = picturePath;
+		this.description = description;
+		this.ownerId = ownerId;
 		this.createdAt = LocalDate.now();
 		this.updatedAt = LocalDate.now();
 	}
@@ -44,28 +54,36 @@ public class User{
 	public Integer getId() {
 		return id;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
 
-	public String getEmail() {
-		return email;
+	public Integer getSurface() {
+		return surface;
 	}
 
-	public String getPassword() {
-		return password;
+	public Integer getPrice() {
+		return price;
 	}
-	
+
+	public String getPicture() {
+		return picture;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public Integer getOwnerId() {
+		return ownerId;
+	}
+
 	public LocalDate getCreatedAt() {
 		return createdAt;
 	}
 
 	public LocalDate getUpdatedAt() {
 		return updatedAt;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 }

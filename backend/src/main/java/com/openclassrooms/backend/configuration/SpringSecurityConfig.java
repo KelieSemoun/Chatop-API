@@ -37,6 +37,7 @@ public class SpringSecurityConfig{
                 	auth.anyRequest().authenticated();
                 })
                 .formLogin(login -> login.disable())
+                //.cors(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
                 .addFilterBefore(JwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();       
