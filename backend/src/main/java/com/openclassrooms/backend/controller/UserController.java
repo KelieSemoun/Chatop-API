@@ -5,13 +5,15 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.openclassrooms.backend.exception.ApiException;
 import com.openclassrooms.backend.exception.ApiRequestException;
+import com.openclassrooms.backend.model.LoginDTO;
+import com.openclassrooms.backend.model.RegisterDTO;
 import com.openclassrooms.backend.model.TokenDTO;
 import com.openclassrooms.backend.model.User;
 import com.openclassrooms.backend.model.UserDTO;
@@ -53,14 +55,13 @@ public class UserController {
 		}
 	)
 	@PostMapping(path="login")
-    public TokenDTO loginUser(@RequestParam String email,
-    						  @RequestParam String password) throws Exception {
+    public TokenDTO loginUser(@RequestBody LoginDTO loginDTO) throws Exception {
 		try {
-			userService.logInUser(email, password);
+			userService.logInUser(loginDTO.email(), loginDTO.password());
 		} catch (DisabledException | BadCredentialsException e){
 			throw new ApiRequestException("Wrong Credentials !");
 		}
-		String token = jwtService.generateToken(email);
+		String token = jwtService.generateToken(loginDTO.email());
         return new TokenDTO(token);
     }
     
@@ -82,13 +83,11 @@ public class UserController {
 		}
 	)
 	@PostMapping(path="register")
-	public TokenDTO registerUser(@RequestParam String name,
-								 @RequestParam String email,
-								 @RequestParam String password) {
-		userService.signUpUser(new User(name,
-										email,
-										password));
-		String token = jwtService.generateToken(email);
+	public TokenDTO registerUser(@RequestBody RegisterDTO registerDTO) {
+		userService.signUpUser(new User(registerDTO.name(),
+										registerDTO.email(),
+										registerDTO.password()));
+		String token = jwtService.generateToken(registerDTO.email());
         return new TokenDTO(token);
 	}
 	
@@ -108,13 +107,10 @@ public class UserController {
 					schema = @Schema(defaultValue = "Unauthorized")
 				)
 			)	
-	})		
+	})
 	@GetMapping(path="me")
-	public UserDTO getMyProfile(@RequestHeader("BearerToken") String bearerToken) {
-		System.out.println("Toto");
-		if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-			bearerToken = bearerToken.substring(7);
-        }
+	public UserDTO getMyProfile(@RequestHeader("Authorization") String bearerToken) {
+		bearerToken = bearerToken.substring(7);
 		String tokenEmail = jwtService.extractUserName(bearerToken);
 		return userService.findMyUser(tokenEmail);
 	}

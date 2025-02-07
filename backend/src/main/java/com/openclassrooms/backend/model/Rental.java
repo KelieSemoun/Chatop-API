@@ -38,13 +38,13 @@ public class Rental {
 	public Rental(String name,
 				   Integer surface,
 				   Integer price,
-				   String picturePath,
+				   String picture,
 				   String description,
 				   Integer ownerId){
 		this.name = name;
 		this.surface = surface;
 		this.price = price;
-		this.picture = picturePath;
+		this.picture = picture;
 		this.description = description;
 		this.ownerId = ownerId;
 		this.createdAt = LocalDate.now();
