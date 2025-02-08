@@ -1,9 +1,11 @@
 package com.openclassrooms.backend.controller;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.openclassrooms.backend.model.ConfirmationDTO;
+import com.openclassrooms.backend.model.Rental;
 import com.openclassrooms.backend.model.RentalsListDTO;
 import com.openclassrooms.backend.service.FileStorageService;
 import com.openclassrooms.backend.service.JWTService;
@@ -87,5 +90,10 @@ public class RentalController {
 	@GetMapping(path="rentals")
 	public RentalsListDTO getAllRentals(@RequestHeader("Authorization") String bearerToken){
 		return rentalService.getAllRentals();
+	}
+	
+	@GetMapping(path="rentals/{id}")
+	public Optional<Rental> getRental(@RequestHeader("Authorization") String bearerToken, @PathVariable Integer id) {
+		return rentalService.getRental(id);
 	}
 }

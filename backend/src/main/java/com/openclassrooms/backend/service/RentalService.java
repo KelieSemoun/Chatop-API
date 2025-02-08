@@ -3,6 +3,7 @@ package com.openclassrooms.backend.service;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,6 +50,10 @@ public class RentalService {
 		}
 		
 		return new RentalsListDTO(rentals);
+	}
+
+	public Optional<Rental> getRental(Integer id) {
+		return rentalRepository.findById(id);
 	}
 
 }
