@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -92,8 +93,54 @@ public class RentalController {
 		return rentalService.getAllRentals();
 	}
 	
+	@Operation(description = "Shows a Rental details from given ID")
+	@ApiResponses(value = {
+			@ApiResponse(
+				description = "Success",
+				responseCode = "200",
+				content = @Content(
+					schema = @Schema(implementation = Rental.class)
+				)
+			),
+			@ApiResponse(
+				description = "Unauthorized",
+				responseCode = "401",
+				content = @Content(
+					schema = @Schema(defaultValue = "Unauthorized")
+				)
+			)	
+	})
 	@GetMapping(path="rentals/{id}")
-	public Optional<Rental> getRental(@RequestHeader("Authorization") String bearerToken, @PathVariable Integer id) {
+	public Optional<Rental> getRental(@RequestHeader("Authorization") String bearerToken, 
+									  @PathVariable Integer id) {
 		return rentalService.getRental(id);
+	}
+	
+	@Operation(description = "Updates an existing rental offer")
+	@ApiResponses(value = {
+			@ApiResponse(
+				description = "Success",
+				responseCode = "200",
+				content = @Content(
+					schema = @Schema(implementation = ConfirmationDTO.class)
+				)
+			),
+			@ApiResponse(
+				description = "Unauthorized",
+				responseCode = "401",
+				content = @Content(
+					schema = @Schema(defaultValue = "Unauthorized")
+				)
+			)	
+	})
+	@PutMapping(path="rentals/{id}")
+	public ConfirmationDTO updateRental(@RequestHeader("Authorization") String bearerToken, 
+			 							@PathVariable Integer id,
+			 							@RequestParam String name,
+										@RequestParam Integer surface,
+										@RequestParam Integer price,
+										@RequestParam String description) {
+		rentalService.updateRental(id, name, surface, price, description);
+		return new ConfirmationDTO("Rental updated !");
 	}
 }

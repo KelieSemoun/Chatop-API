@@ -55,4 +55,13 @@ public class UserService{
 						   res.getCreatedAt(),
 						   res.getUpdatedAt());
 	}
+
+	public UserDTO getUser(Integer id) {
+		User res = userRepository.findById(id).get();
+		return new UserDTO(res.getId(),
+						   res.getName(),
+						   res.getEmail(),
+						   res.getCreatedAt(),
+						   res.getUpdatedAt());
+	}
 }

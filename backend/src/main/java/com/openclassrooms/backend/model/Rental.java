@@ -31,7 +31,7 @@ public class Rental {
 	
 	private String description;
 	
-	private Integer ownerId;
+	private Integer owner_id;
 	
 	private LocalDate created_at;
 	
@@ -48,7 +48,7 @@ public class Rental {
 		this.price = price;
 		this.picture = picture;
 		this.description = description;
-		this.ownerId = ownerId;
+		this.owner_id = ownerId;
 		this.created_at = LocalDate.now();
 		this.updated_at = LocalDate.now();
 	}
@@ -78,7 +78,7 @@ public class Rental {
 	}
 
 	public Integer getOwnerId() {
-		return ownerId;
+		return owner_id;
 	}
 
 	public LocalDate getCreatedAt() {

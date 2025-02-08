@@ -56,4 +56,17 @@ public class RentalService {
 		return rentalRepository.findById(id);
 	}
 
+	public void updateRental(Integer id, String name, Integer surface, Integer price, String description) {
+		Optional<Rental> optionalRental = rentalRepository.findById(id);
+		if(optionalRental.isPresent()) {
+			Rental rental = optionalRental.get();
+	        rental.setName(name);
+	        rental.setSurface(surface);
+	        rental.setPrice(price);
+	        rental.setDescription(description);
+	        
+	        rentalRepository.save(rental);
+		}
+	}
+
 }
