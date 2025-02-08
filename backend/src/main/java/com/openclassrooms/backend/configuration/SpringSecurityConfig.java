@@ -32,8 +32,10 @@ public class SpringSecurityConfig{
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> {
+                	auth.requestMatchers("debug/**").permitAll();
                 	auth.requestMatchers("api/auth/login", "api/auth/register").permitAll();
                 	auth.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll();
+                	auth.requestMatchers("/images/**").permitAll();
                 	auth.anyRequest().authenticated();
                 })
                 .formLogin(login -> login.disable())

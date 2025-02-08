@@ -1,9 +1,14 @@
 package com.openclassrooms.backend.service;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.openclassrooms.backend.model.Rental;
+import com.openclassrooms.backend.model.RentalsListDTO;
 import com.openclassrooms.backend.repository.RentalRepository;
 import com.openclassrooms.backend.repository.UserRepository;
 
@@ -22,6 +27,7 @@ public class RentalService {
 							 String picture,
 							 String description,
 							 String tokenEmail) {
+		
 		Integer ownerId = userRepository.findByEmail(tokenEmail).getId();
 		
 		Rental rental = new Rental(name,
@@ -32,6 +38,17 @@ public class RentalService {
 								   ownerId);
 		
 		rentalRepository.save(rental);
+	}
+
+	public RentalsListDTO getAllRentals() {
+		List<Rental> rentals = new ArrayList<Rental>();
+		Iterator<Rental> rentalsIt = rentalRepository.findAll().iterator();
+		
+		while(rentalsIt.hasNext()) {
+			rentals.add(rentalsIt.next());
+		}
+		
+		return new RentalsListDTO(rentals);
 	}
 
 }

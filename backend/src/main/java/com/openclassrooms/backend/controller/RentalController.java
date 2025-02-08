@@ -3,6 +3,7 @@ package com.openclassrooms.backend.controller;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.openclassrooms.backend.model.ConfirmationDTO;
+import com.openclassrooms.backend.model.RentalsListDTO;
 import com.openclassrooms.backend.service.FileStorageService;
 import com.openclassrooms.backend.service.JWTService;
 import com.openclassrooms.backend.service.RentalService;
@@ -63,5 +65,27 @@ public class RentalController {
 		String picturePath = fileStorageService.savePicture(picture);
 		rentalService.createRental(name, surface, price, picturePath, description, tokenEmail);
 		return new ConfirmationDTO("Rental Created !");
+	}
+	
+	@Operation(description = "Shows all Rental details")
+	@ApiResponses(value = {
+			@ApiResponse(
+				description = "Success",
+				responseCode = "200",
+				content = @Content(
+					schema = @Schema(implementation = RentalsListDTO.class)
+				)
+			),
+			@ApiResponse(
+				description = "Unauthorized",
+				responseCode = "401",
+				content = @Content(
+					schema = @Schema(defaultValue = "Unauthorized")
+				)
+			)	
+	})
+	@GetMapping(path="rentals")
+	public RentalsListDTO getAllRentals(@RequestHeader("Authorization") String bearerToken){
+		return rentalService.getAllRentals();
 	}
 }
