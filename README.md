@@ -2,15 +2,15 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.1.0.
 
-## Start the project
+## Start Frontend
 
 Git clone:
 
-> git clone https://github.com/OpenClassrooms-Student-Center/P3-Full-Stack-portail-locataire
+> git clone : https://github.com/KelieSemoun/Chatop-API
 
 Go inside folder:
 
-> cd P3-Full-Stack-portail-locataire
+> cd Chatop-API
 
 Install dependencies:
 
@@ -20,36 +20,27 @@ Launch Front-end:
 
 > npm run start;
 
+## Setup Backend
 
-## Ressources
-
-### Mockoon env
-
-Download Mockoon here: https://mockoon.com/download/
-
-After installing you could load the environement
-
-> ressources/mockoon/rental-oc.json
-
-directly inside Mockoon 
-
-> File > Open environmement
-
-For launching the Mockoon server click on play bouton
-
-Mockoon documentation: https://mockoon.com/docs/latest/about/
-
-### Postman collection
-
-For Postman import the collection
-
-> ressources/postman/rental.postman_collection.json 
-
-by following the documentation: 
-
-https://learning.postman.com/docs/getting-started/importing-and-exporting-data/#importing-data-into-postman
-
-
-### MySQL
-
+Create a MySQL Database using MySQL CLI with the following commands :
+```
+CREATE DATABASE myDatabase;
+USE myDatabase;
+```
 SQL script for creating the schema is available `ressources/sql/script.sql`
+
+Go to backend/src/main/resources and create a file named "env.properties" where you put the following lines :
+```
+DB_USER=[YOUR DATABASE USERNAME]
+DB_PASSWORD=[YOUR DATABASE PASSWORD]
+DB_DATABASE_NAME=[YOUR DATABASE NAME]
+```
+Start the backend application by executing the following command line in the backend/ folder :
+
+> mvn spring-boot:run;
+
+And visit http://localhost:4200 to view the site.
+
+## Swagger
+
+Swager documentation is available at http://localhost:8080/swagger-ui/index.html once you started the backend application.
