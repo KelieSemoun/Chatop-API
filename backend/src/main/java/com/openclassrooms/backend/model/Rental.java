@@ -88,4 +88,8 @@ public class Rental {
 	public LocalDate getUpdatedAt() {
 		return updated_at;
 	}
+
+	public void update() {
+		this.updated_at = LocalDate.now();
+	}
 }

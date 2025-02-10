@@ -64,6 +64,7 @@ public class RentalService {
 	        rental.setSurface(surface);
 	        rental.setPrice(price);
 	        rental.setDescription(description);
+	        rental.update();
 	        
 	        rentalRepository.save(rental);
 		}
