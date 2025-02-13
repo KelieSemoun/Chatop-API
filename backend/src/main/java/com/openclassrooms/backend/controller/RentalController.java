@@ -1,7 +1,6 @@
 package com.openclassrooms.backend.controller;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.openclassrooms.backend.model.ConfirmationDTO;
 import com.openclassrooms.backend.model.Rental;
+import com.openclassrooms.backend.model.RentalDTO;
 import com.openclassrooms.backend.model.RentalsListDTO;
 import com.openclassrooms.backend.service.FileStorageService;
 import com.openclassrooms.backend.service.JWTService;
@@ -99,7 +99,7 @@ public class RentalController {
 				description = "Success",
 				responseCode = "200",
 				content = @Content(
-					schema = @Schema(implementation = Rental.class)
+					schema = @Schema(implementation = RentalDTO.class)
 				)
 			),
 			@ApiResponse(
@@ -111,9 +111,19 @@ public class RentalController {
 			)	
 	})
 	@GetMapping(path="rentals/{id}")
-	public Optional<Rental> getRental(@RequestHeader("Authorization") String bearerToken, 
-									  @PathVariable Integer id) {
-		return rentalService.getRental(id);
+	public RentalDTO getRental(@RequestHeader("Authorization") String bearerToken, 
+							   @PathVariable Integer id) {
+		Rental rental = rentalService.getRental(id);
+		return new RentalDTO(rental.getId(),
+							 rental.getName(),
+							 rental.getSurface(),
+							 rental.getPrice(),
+							 rental.getPicture(),
+							 rental.getDescription(),
+							 rental.getOwner_id(),
+							 rental.getCreated_at(),
+							 rental.getUpdated_at()
+				);
 	}
 	
 	@Operation(description = "Updates an existing rental offer")

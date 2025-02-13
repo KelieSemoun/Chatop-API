@@ -8,7 +8,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.openclassrooms.backend.exception.ApiRequestException;
 import com.openclassrooms.backend.model.Rental;
+import com.openclassrooms.backend.model.RentalDTO;
 import com.openclassrooms.backend.model.RentalsListDTO;
 import com.openclassrooms.backend.repository.RentalRepository;
 import com.openclassrooms.backend.repository.UserRepository;
@@ -42,32 +44,47 @@ public class RentalService {
 	}
 
 	public RentalsListDTO getAllRentals() {
-		List<Rental> rentals = new ArrayList<Rental>();
+		List<RentalDTO> rentals = new ArrayList<RentalDTO>();
 		Iterator<Rental> rentalsIt = rentalRepository.findAll().iterator();
+		Rental curRental;
 		
 		while(rentalsIt.hasNext()) {
-			rentals.add(rentalsIt.next());
+			curRental = rentalsIt.next();
+			rentals.add(new RentalDTO(curRental.getId(),
+							 curRental.getName(),
+							 curRental.getSurface(),
+							 curRental.getPrice(),
+							 curRental.getPicture(),
+							 curRental.getDescription(),
+							 curRental.getOwner_id(),
+							 curRental.getCreated_at(),
+							 curRental.getUpdated_at()
+						));
 		}
-		
 		return new RentalsListDTO(rentals);
 	}
 
-	public Optional<Rental> getRental(Integer id) {
-		return rentalRepository.findById(id);
+	public Rental getRental(Integer id) {
+		Optional<Rental> rentalOpt = rentalRepository.findById(id);
+		if(!rentalOpt.isPresent()) {
+			throw new ApiRequestException("User with associated ID couldn't be found");
+		}
+		return rentalOpt.get();
 	}
 
 	public void updateRental(Integer id, String name, Integer surface, Integer price, String description) {
 		Optional<Rental> optionalRental = rentalRepository.findById(id);
-		if(optionalRental.isPresent()) {
-			Rental rental = optionalRental.get();
-	        rental.setName(name);
-	        rental.setSurface(surface);
-	        rental.setPrice(price);
-	        rental.setDescription(description);
-	        rental.update();
-	        
-	        rentalRepository.save(rental);
+		if(!optionalRental.isPresent()) {
+			throw new ApiRequestException("User with associated ID couldn't be found");
 		}
+		Rental rental = optionalRental.get();
+	    rental.setName(name);
+	    rental.setSurface(surface);
+	    rental.setPrice(price);
+	    rental.setDescription(description);
+	    rental.update();
+	        
+	    rentalRepository.save(rental);
 	}
 
 }

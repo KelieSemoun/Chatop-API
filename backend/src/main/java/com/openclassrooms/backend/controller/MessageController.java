@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.openclassrooms.backend.exception.ApiException;
 import com.openclassrooms.backend.model.ConfirmationDTO;
+import com.openclassrooms.backend.model.MessageDTO;
 import com.openclassrooms.backend.service.MessageService;
 
 import io.swagger.v3.oas.annotations.Operation;
